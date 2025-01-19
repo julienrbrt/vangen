@@ -7,6 +7,3 @@ test:
 
 build:
 	go build
-
-release:
-	goreleaser
