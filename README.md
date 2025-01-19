@@ -1,40 +1,19 @@
 # vangen
-![.github/workflows/test.yml](https://github.com/leighmcculloch/vangen/workflows/.github/workflows/test.yml/badge.svg)
-![.github/workflows/release.yml](https://github.com/leighmcculloch/vangen/workflows/.github/workflows/release.yml/badge.svg)
-[![Go Report Card](https://goreportcard.com/badge/github.com/leighmcculloch/vangen)](https://goreportcard.com/report/github.com/leighmcculloch/vangen)
-[![Go docs](https://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/github.com/leighmcculloch/vangen)
 
 Vangen is a tool for generating static HTML for Go vanity import paths.
 
 Go vanity import paths work by serving a HTML file that tells the `go get` tool where to download the source from. You can still host the source code at Github, BitBucket, but the vanity URL gives you portability and other benefits.
 
 ## Why
+
 * Maintain Go vanity import paths with a simple definition file `vangen.json`.
 * Host Go vanity import paths using static hosting. No need for Google AppEngine, Heroku, etc. Host the files on Github Pages, AWS S3, Google Cloud Storage, etc.
 
 ## Install
 
-### Source
-
+```sh
+go install github.com/julienrbrt/vangen@latest
 ```
-go get 4d63.com/vangen
-```
-
-### Linux
-
-```
-curl -sSL https://github.com/leighmcculloch/vangen/releases/download/v1.1.3/vangen_1.1.3_linux_amd64.tar.gz | tar xz -C /usr/local/bin vangen
-```
-
-### Mac
-
-```
-curl -sSL https://github.com/leighmcculloch/vangen/releases/download/v1.1.3/vangen_1.1.3_darwin_amd64.tar.gz | tar xz -C /usr/local/bin vangen
-```
-
-### Windows
-
-[Download the executable](https://github.com/leighmcculloch/vangen/releases/download/v1.1.3/vangen_1.1.3_windows_amd64.zip), and save it to your path.
 
 ## Usage
 
@@ -43,7 +22,7 @@ curl -sSL https://github.com/leighmcculloch/vangen/releases/download/v1.1.3/vang
 3. Host the files outputted in `vangen/` at your domain
 4. Try it out with `go get [domain]/[package]`
 
-```
+```sh
 $ vangen -help
 Vangen is a tool for generating static HTML for hosting Go repositories at a vanity import path.
 
@@ -113,3 +92,10 @@ The repository `type` and `source` properties will be set automatically when `ur
   ]
 }
 ```
+
+### Thanks
+
+This project is a fork of [leighmcculloch/vangen](https://leighmcculloch/vangen) with the following changes:
+
+* Changed go.mod name to `github.com/julienrbrt/vangen` for easier installation of this fork
+* UI improvements
