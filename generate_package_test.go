@@ -14,7 +14,7 @@ func TestGenerate(t *testing.T) {
 		docsDomain  string
 		pkg         string
 		r           repository
-		expectedOut string
+		goldenFile  string
 		expectedErr error
 	}{
 		{
@@ -28,31 +28,7 @@ func TestGenerate(t *testing.T) {
 				Type:   "git",
 				URL:    "https://repositoryhost.com/example/go-pkg1",
 			},
-			expectedOut: `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>example.com/pkg1</title>
-<meta name="go-import" content="example.com/pkg1 git https://repositoryhost.com/example/go-pkg1">
-<meta name="go-source" content="example.com/pkg1 _ _ _">
-<style>
-* { font-family: sans-serif; }
-body { margin-top: 0; }
-.content { display: inline-block; }
-code { display: block; font-family: monospace; font-size: 1em; background-color: #d5d5d5; padding: 1em; margin-bottom: 16px; }
-ul { margin-top: 16px; margin-bottom: 16px; }
-</style>
-</head>
-<body>
-<div class="content">
-<h2>example.com/pkg1</h2>
-<code>go get example.com/pkg1</code>
-<code>import "example.com/pkg1"</code>
-Home: <a href="https://godoc.org/example.com/pkg1">https://godoc.org/example.com/pkg1</a><br/>
-Source: <a href="https://repositoryhost.com/example/go-pkg1">https://repositoryhost.com/example/go-pkg1</a><br/>
-Sub-packages:<ul><li><a href="/pkg1/subpkg1">example.com/pkg1/subpkg1</a></li><li><a href="/pkg1/subpkg2">example.com/pkg1/subpkg2</a></li></ul></div>
-</body>
-</html>`,
+			goldenFile:  "simple.pkgs.golden.html",
 			expectedErr: nil,
 		},
 		{
@@ -67,31 +43,7 @@ Sub-packages:<ul><li><a href="/pkg1/subpkg1">example.com/pkg1/subpkg1</a></li><l
 				Type:   "git",
 				URL:    "https://repositoryhost.com/example/go-pkg1",
 			},
-			expectedOut: `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>example.com/pkg1</title>
-<meta name="go-import" content="example.com/pkg1 git https://repositoryhost.com/example/go-pkg1">
-<meta name="go-source" content="example.com/pkg1 _ _ _">
-<style>
-* { font-family: sans-serif; }
-body { margin-top: 0; }
-.content { display: inline-block; }
-code { display: block; font-family: monospace; font-size: 1em; background-color: #d5d5d5; padding: 1em; margin-bottom: 16px; }
-ul { margin-top: 16px; margin-bottom: 16px; }
-</style>
-</head>
-<body>
-<div class="content">
-<h2>example.com/pkg1</h2>
-<code>go get example.com/pkg1</code>
-<code>import "example.com/pkg1"</code>
-Home: <a href="https://godoc.org/example.com/pkg1">https://godoc.org/example.com/pkg1</a><br/>
-Source: <a href="https://repositoryhost.com/example/go-pkg1">https://repositoryhost.com/example/go-pkg1</a><br/>
-Sub-packages:<ul><li><a href="/pkg1/subpkg1">example.com/pkg1/subpkg1</a></li><li><a href="/pkg1/subpkg2">example.com/pkg1/subpkg2</a></li></ul></div>
-</body>
-</html>`,
+			goldenFile:  "hidden.pkgs.golden.html",
 			expectedErr: nil,
 		},
 		{
@@ -113,31 +65,7 @@ Sub-packages:<ul><li><a href="/pkg1/subpkg1">example.com/pkg1/subpkg1</a></li><l
 					URL: "https://www.example.com",
 				},
 			},
-			expectedOut: `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>example.com/pkg1</title>
-<meta name="go-import" content="example.com/pkg1 git https://repositoryhost.com/example/go-pkg1">
-<meta name="go-source" content="example.com/pkg1 https://repositoryhost.com/example/go-pkg1/home https://repositoryhost.com/example/go-pkg1/browser{/dir} https://repositoryhost.com/example/go-pkg1/view{/dir}{/file}">
-<style>
-* { font-family: sans-serif; }
-body { margin-top: 0; }
-.content { display: inline-block; }
-code { display: block; font-family: monospace; font-size: 1em; background-color: #d5d5d5; padding: 1em; margin-bottom: 16px; }
-ul { margin-top: 16px; margin-bottom: 16px; }
-</style>
-</head>
-<body>
-<div class="content">
-<h2>example.com/pkg1</h2>
-<code>go get example.com/pkg1</code>
-<code>import "example.com/pkg1"</code>
-Home: <a href="https://www.example.com">https://www.example.com</a><br/>
-Source: <a href="https://repositoryhost.com/example/go-pkg1">https://repositoryhost.com/example/go-pkg1</a><br/>
-Sub-packages:<ul><li><a href="/pkg1/subpkg1">example.com/pkg1/subpkg1</a></li><li><a href="/pkg1/subpkg2">example.com/pkg1/subpkg2</a></li></ul></div>
-</body>
-</html>`,
+			goldenFile:  "custom-source-urls.pkgs.golden.html",
 			expectedErr: nil,
 		},
 		{
@@ -158,31 +86,7 @@ Sub-packages:<ul><li><a href="/pkg1/subpkg1">example.com/pkg1/subpkg1</a></li><l
 					URL: "https://www.example.com",
 				},
 			},
-			expectedOut: `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>example.com/pkg1/subpkg1</title>
-<meta name="go-import" content="example.com/pkg1 git https://repositoryhost.com/example/go-pkg1">
-<meta name="go-source" content="example.com/pkg1 https://repositoryhost.com/example/go-pkg1/home https://repositoryhost.com/example/go-pkg1/browser{/dir} https://repositoryhost.com/example/go-pkg1/view{/dir}{/file}">
-<style>
-* { font-family: sans-serif; }
-body { margin-top: 0; }
-.content { display: inline-block; }
-code { display: block; font-family: monospace; font-size: 1em; background-color: #d5d5d5; padding: 1em; margin-bottom: 16px; }
-ul { margin-top: 16px; margin-bottom: 16px; }
-</style>
-</head>
-<body>
-<div class="content">
-<h2>example.com/pkg1/subpkg1</h2>
-<code>go get example.com/pkg1/subpkg1</code>
-<code>import "example.com/pkg1/subpkg1"</code>
-Home: <a href="https://www.example.com">https://www.example.com</a><br/>
-Source: <a href="https://repositoryhost.com/example/go-pkg1">https://repositoryhost.com/example/go-pkg1</a><br/>
-Sub-packages:<ul><li><a href="/pkg1/subpkg1">example.com/pkg1/subpkg1</a></li><li><a href="/pkg1/subpkg2">example.com/pkg1/subpkg2</a></li></ul></div>
-</body>
-</html>`,
+			goldenFile:  "sub-package.pkgs.golden.html",
 			expectedErr: nil,
 		},
 		{
@@ -203,31 +107,7 @@ Sub-packages:<ul><li><a href="/pkg1/subpkg1">example.com/pkg1/subpkg1</a></li><l
 					URL: "https://www.example.com",
 				},
 			},
-			expectedOut: `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>example.com/pkg1/subpkg1</title>
-<meta name="go-import" content="example.com/pkg1 git https://repositoryhost.com/example/go-pkg1">
-<meta name="go-source" content="example.com/pkg1 https://repositoryhost.com/example/go-pkg1/home https://repositoryhost.com/example/go-pkg1/browser{/dir} https://repositoryhost.com/example/go-pkg1/view{/dir}{/file}">
-<style>
-* { font-family: sans-serif; }
-body { margin-top: 0; }
-.content { display: inline-block; }
-code { display: block; font-family: monospace; font-size: 1em; background-color: #d5d5d5; padding: 1em; margin-bottom: 16px; }
-ul { margin-top: 16px; margin-bottom: 16px; }
-</style>
-</head>
-<body>
-<div class="content">
-<h2>example.com/pkg1/subpkg1</h2>
-<code>go get example.com/pkg1/subpkg1</code>
-<code>import "example.com/pkg1/subpkg1"</code>
-Home: <a href="https://www.example.com">https://www.example.com</a><br/>
-Source: <a href="https://repositoryhost.com/example/go-pkg1">https://repositoryhost.com/example/go-pkg1</a><br/>
-Sub-packages:<ul><li><a href="/pkg1/subpkg1">example.com/pkg1/subpkg1</a></li><li><a href="/pkg1/subpkg2">example.com/pkg1/subpkg2</a></li></ul></div>
-</body>
-</html>`,
+			goldenFile:  "sub-package-hidden.pkgs.golden.html",
 			expectedErr: nil,
 		},
 		{
@@ -240,31 +120,7 @@ Sub-packages:<ul><li><a href="/pkg1/subpkg1">example.com/pkg1/subpkg1</a></li><l
 				Subs:   []sub{{Name: "subpkg1"}, {Name: "subpkg2"}},
 				URL:    "https://github.com/example/go-pkg1",
 			},
-			expectedOut: `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>example.com/pkg1</title>
-<meta name="go-import" content="example.com/pkg1 git https://github.com/example/go-pkg1">
-<meta name="go-source" content="example.com/pkg1 https://github.com/example/go-pkg1 https://github.com/example/go-pkg1/tree/master{/dir} https://github.com/example/go-pkg1/blob/master{/dir}/{file}#L{line}">
-<style>
-* { font-family: sans-serif; }
-body { margin-top: 0; }
-.content { display: inline-block; }
-code { display: block; font-family: monospace; font-size: 1em; background-color: #d5d5d5; padding: 1em; margin-bottom: 16px; }
-ul { margin-top: 16px; margin-bottom: 16px; }
-</style>
-</head>
-<body>
-<div class="content">
-<h2>example.com/pkg1</h2>
-<code>go get example.com/pkg1</code>
-<code>import "example.com/pkg1"</code>
-Home: <a href="https://pkg.go.dev/example.com/pkg1">https://pkg.go.dev/example.com/pkg1</a><br/>
-Source: <a href="https://github.com/example/go-pkg1">https://github.com/example/go-pkg1</a><br/>
-Sub-packages:<ul><li><a href="/pkg1/subpkg1">example.com/pkg1/subpkg1</a></li><li><a href="/pkg1/subpkg2">example.com/pkg1/subpkg2</a></li></ul></div>
-</body>
-</html>`,
+			goldenFile:  "github-defaults.pkgs.golden.html",
 			expectedErr: nil,
 		},
 		{
@@ -277,31 +133,7 @@ Sub-packages:<ul><li><a href="/pkg1/subpkg1">example.com/pkg1/subpkg1</a></li><l
 				Subs:   []sub{{Name: "subpkg1"}, {Name: "subpkg2"}},
 				URL:    "https://github.com/example/go-pkg1",
 			},
-			expectedOut: `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>example.com/pkg1/subpkg1</title>
-<meta name="go-import" content="example.com/pkg1 git https://github.com/example/go-pkg1">
-<meta name="go-source" content="example.com/pkg1 https://github.com/example/go-pkg1 https://github.com/example/go-pkg1/tree/master{/dir} https://github.com/example/go-pkg1/blob/master{/dir}/{file}#L{line}">
-<style>
-* { font-family: sans-serif; }
-body { margin-top: 0; }
-.content { display: inline-block; }
-code { display: block; font-family: monospace; font-size: 1em; background-color: #d5d5d5; padding: 1em; margin-bottom: 16px; }
-ul { margin-top: 16px; margin-bottom: 16px; }
-</style>
-</head>
-<body>
-<div class="content">
-<h2>example.com/pkg1/subpkg1</h2>
-<code>go get example.com/pkg1/subpkg1</code>
-<code>import "example.com/pkg1/subpkg1"</code>
-Home: <a href="https://pkg.go.dev/example.com/pkg1/subpkg1">https://pkg.go.dev/example.com/pkg1/subpkg1</a><br/>
-Source: <a href="https://github.com/example/go-pkg1">https://github.com/example/go-pkg1</a><br/>
-Sub-packages:<ul><li><a href="/pkg1/subpkg1">example.com/pkg1/subpkg1</a></li><li><a href="/pkg1/subpkg2">example.com/pkg1/subpkg2</a></li></ul></div>
-</body>
-</html>`,
+			goldenFile:  "sub-package-github-defaults.pkgs.golden.html",
 			expectedErr: nil,
 		},
 		{
@@ -314,31 +146,7 @@ Sub-packages:<ul><li><a href="/pkg1/subpkg1">example.com/pkg1/subpkg1</a></li><l
 				Subs:   []sub{{Name: "subpkg1"}, {Name: "subpkg2"}},
 				URL:    "https://gitlab.com/example/go-pkg1",
 			},
-			expectedOut: `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>example.com/pkg1</title>
-<meta name="go-import" content="example.com/pkg1 git https://gitlab.com/example/go-pkg1">
-<meta name="go-source" content="example.com/pkg1 https://gitlab.com/example/go-pkg1 https://gitlab.com/example/go-pkg1/tree/master{/dir} https://gitlab.com/example/go-pkg1/blob/master{/dir}/{file}#L{line}">
-<style>
-* { font-family: sans-serif; }
-body { margin-top: 0; }
-.content { display: inline-block; }
-code { display: block; font-family: monospace; font-size: 1em; background-color: #d5d5d5; padding: 1em; margin-bottom: 16px; }
-ul { margin-top: 16px; margin-bottom: 16px; }
-</style>
-</head>
-<body>
-<div class="content">
-<h2>example.com/pkg1</h2>
-<code>go get example.com/pkg1</code>
-<code>import "example.com/pkg1"</code>
-Home: <a href="https://pkg.go.dev/example.com/pkg1">https://pkg.go.dev/example.com/pkg1</a><br/>
-Source: <a href="https://gitlab.com/example/go-pkg1">https://gitlab.com/example/go-pkg1</a><br/>
-Sub-packages:<ul><li><a href="/pkg1/subpkg1">example.com/pkg1/subpkg1</a></li><li><a href="/pkg1/subpkg2">example.com/pkg1/subpkg2</a></li></ul></div>
-</body>
-</html>`,
+			goldenFile:  "gitlab-defaults.pkgs.golden.html",
 			expectedErr: nil,
 		},
 		{
@@ -351,31 +159,7 @@ Sub-packages:<ul><li><a href="/pkg1/subpkg1">example.com/pkg1/subpkg1</a></li><l
 				Subs:   []sub{{Name: "subpkg1"}, {Name: "subpkg2"}},
 				URL:    "https://gitlab.com/example/go-pkg1",
 			},
-			expectedOut: `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>example.com/pkg1/subpkg1</title>
-<meta name="go-import" content="example.com/pkg1 git https://gitlab.com/example/go-pkg1">
-<meta name="go-source" content="example.com/pkg1 https://gitlab.com/example/go-pkg1 https://gitlab.com/example/go-pkg1/tree/master{/dir} https://gitlab.com/example/go-pkg1/blob/master{/dir}/{file}#L{line}">
-<style>
-* { font-family: sans-serif; }
-body { margin-top: 0; }
-.content { display: inline-block; }
-code { display: block; font-family: monospace; font-size: 1em; background-color: #d5d5d5; padding: 1em; margin-bottom: 16px; }
-ul { margin-top: 16px; margin-bottom: 16px; }
-</style>
-</head>
-<body>
-<div class="content">
-<h2>example.com/pkg1/subpkg1</h2>
-<code>go get example.com/pkg1/subpkg1</code>
-<code>import "example.com/pkg1/subpkg1"</code>
-Home: <a href="https://pkg.go.dev/example.com/pkg1/subpkg1">https://pkg.go.dev/example.com/pkg1/subpkg1</a><br/>
-Source: <a href="https://gitlab.com/example/go-pkg1">https://gitlab.com/example/go-pkg1</a><br/>
-Sub-packages:<ul><li><a href="/pkg1/subpkg1">example.com/pkg1/subpkg1</a></li><li><a href="/pkg1/subpkg2">example.com/pkg1/subpkg2</a></li></ul></div>
-</body>
-</html>`,
+			goldenFile:  "sub-package-gitlab-defaults.pkgs.golden.html",
 			expectedErr: nil,
 		},
 		{
@@ -397,31 +181,7 @@ Sub-packages:<ul><li><a href="/pkg1/subpkg1">example.com/pkg1/subpkg1</a></li><l
 					URL: "https://www.example.com",
 				},
 			},
-			expectedOut: `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>example.com/pkg1</title>
-<meta name="go-import" content="example.com/pkg1 git https://github.com/example/go-pkg1">
-<meta name="go-source" content="example.com/pkg1 https://github.com/example/go-pkg1 https://github.com/example/go-pkg1/tree/branch{/dir} https://github.com/example/go-pkg1/blob/branch{/dir}/{file}#L{line}">
-<style>
-* { font-family: sans-serif; }
-body { margin-top: 0; }
-.content { display: inline-block; }
-code { display: block; font-family: monospace; font-size: 1em; background-color: #d5d5d5; padding: 1em; margin-bottom: 16px; }
-ul { margin-top: 16px; margin-bottom: 16px; }
-</style>
-</head>
-<body>
-<div class="content">
-<h2>example.com/pkg1</h2>
-<code>go get example.com/pkg1</code>
-<code>import "example.com/pkg1"</code>
-Home: <a href="https://www.example.com">https://www.example.com</a><br/>
-Source: <a href="https://github.com/example/go-pkg1">https://github.com/example/go-pkg1</a><br/>
-Sub-packages:<ul><li><a href="/pkg1/subpkg1">example.com/pkg1/subpkg1</a></li><li><a href="/pkg1/subpkg2">example.com/pkg1/subpkg2</a></li></ul></div>
-</body>
-</html>`,
+			goldenFile:  "github-defaults-custom-source.pkgs.golden.html",
 			expectedErr: nil,
 		},
 		{
@@ -443,44 +203,25 @@ Sub-packages:<ul><li><a href="/pkg1/subpkg1">example.com/pkg1/subpkg1</a></li><l
 					URL: "https://www.example.com",
 				},
 			},
-			expectedOut: `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>example.com/</title>
-<meta name="go-import" content="example.com git https://github.com/example/go-pkg1">
-<meta name="go-source" content="example.com https://github.com/example/go-pkg1 https://github.com/example/go-pkg1/tree/branch{/dir} https://github.com/example/go-pkg1/blob/branch{/dir}/{file}#L{line}">
-<style>
-* { font-family: sans-serif; }
-body { margin-top: 0; }
-.content { display: inline-block; }
-code { display: block; font-family: monospace; font-size: 1em; background-color: #d5d5d5; padding: 1em; margin-bottom: 16px; }
-ul { margin-top: 16px; margin-bottom: 16px; }
-</style>
-</head>
-<body>
-<div class="content">
-<h2>example.com/</h2>
-<code>go get example.com/</code>
-<code>import "example.com/"</code>
-Home: <a href="https://www.example.com">https://www.example.com</a><br/>
-Source: <a href="https://github.com/example/go-pkg1">https://github.com/example/go-pkg1</a><br/>
-Sub-packages:<ul><li><a href="/subpkg1">example.com/subpkg1</a></li><li><a href="/subpkg2">example.com/subpkg2</a></li></ul></div>
-</body>
-</html>`,
+			goldenFile:  "single-module-deployment-no-prefix.pkgs.golden.html",
 			expectedErr: nil,
 		},
 	}
 
 	for _, tc := range testCases {
-		var out bytes.Buffer
-		err := generate_package(&out, tc.domain, tc.docsDomain, tc.pkg, tc.r)
-		if err != tc.expectedErr {
-			t.Errorf("Test case %q got err %#v, want %#v", tc.description, err, tc.expectedErr)
-		} else if out.String() != tc.expectedOut {
-			dmp := diffmatchpatch.New()
-			diffs := dmp.DiffMain(tc.expectedOut, out.String(), false)
-			t.Errorf("Test case %q got: \n%s\nAs diff:\n%s", tc.description, out.String(), dmp.DiffPrettyText(diffs))
-		}
+		t.Run(tc.description, func(t *testing.T) {
+			var out bytes.Buffer
+			err := generate_package(&out, tc.domain, tc.docsDomain, tc.pkg, tc.r)
+			if err != tc.expectedErr {
+				t.Errorf("Test case %q got err %#v, want %#v", tc.description, err, tc.expectedErr)
+			} else {
+				expected := loadGolden(t, tc.goldenFile)
+				if out.String() != expected {
+					dmp := diffmatchpatch.New()
+					diffs := dmp.DiffMain(expected, out.String(), false)
+					t.Errorf("Test case %q mismatch:\n%s", tc.description, dmp.DiffPrettyText(diffs))
+				}
+			}
+		})
 	}
 }

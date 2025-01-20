@@ -11,11 +11,35 @@ func generate_index(w io.Writer, domain string, r []repository) error {
 <html>
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{.Domain}} Go Modules</title>
 <style>
 * { font-family: sans-serif; }
-body { margin-top: 0; }
-.content { display: inline-block; }
+body { margin: 16px; background-color: #f4f4f4; }
+.content {
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 16px;
+}
+code {
+  display: block;
+  font-family: monospace;
+  font-size: 1em;
+  background-color: #eee;
+  padding: 1em;
+  margin-bottom: 16px;
+}
+ul { margin-top: 16px; margin-bottom: 16px; }
+@media (max-width: 600px) {
+  .content {
+    max-width: 100%;
+    margin: 0 8px;
+    box-shadow: none;
+  }
+}
 </style>
 </head>
 <body>
@@ -23,7 +47,9 @@ body { margin-top: 0; }
 
 <h2>{{.Domain}} Go Modules</h2>
 
+{{ if .MainRepositories }}
 <h3>Tools:</h3>
+{{ end }}
 
 <ul>
 {{range $_, $r := .MainRepositories -}}
